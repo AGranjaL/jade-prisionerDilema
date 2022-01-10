@@ -63,10 +63,10 @@ public class RandomAgent extends Agent {
 
         @Override
         public void action() {
-           // System.out.println(getAID().getName() + ":" + state.name());
+            System.out.println(getAID().getName() + ":" + state.name());
             msg = blockingReceive();
             if (msg != null) {
-                //System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
+                System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
                 //-------- Agent logic
                 switch (state) {
                     case s0NoConfig:
@@ -123,9 +123,9 @@ public class RandomAgent extends Agent {
                             ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                             msg.addReceiver(mainAgent);
                             int pos = distValues.nextInt(S);
-                            //System.out.println("Position chosen:"+ pos);
+                            System.out.println("Position chosen:"+ pos);
                             msg.setContent("Position#"+pos);
-                            //System.out.println(getAID().getName() + " sent " + msg.getContent());
+                            System.out.println(getAID().getName() + " sent " + msg.getContent());
                             send(msg);
                             state = State.s3AwaitingResult;
                         } else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Changed#")) {
@@ -210,7 +210,6 @@ public class RandomAgent extends Agent {
             return false;
         }
         public boolean getResults(String msgContent){
-            int resultsA, resultsB;
             String[] contentSplit = msgContent.split("#");
             if(contentSplit.length != 3) return false;
             if(contentSplit[0].equals("Results")) return false;

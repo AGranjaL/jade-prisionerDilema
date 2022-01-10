@@ -59,6 +59,9 @@ public class MainAgent extends Agent {
         gui.setPlayersUI(playerNames);
         return 0;                
     }
+    public boolean getVerbose(){
+        return gui.toggleVerboseWindowMenu.getState();
+    }
     public String getPlayerInfo(String playerAgentName) {
         String splayerLogs = "";
         for (int i = 0; i < playerAgents.length; i++) {
@@ -190,11 +193,14 @@ public class MainAgent extends Agent {
             ArrayList<PlayerInformation> players = new ArrayList<>();
             int lastId = 0;
             for (AID a : playerAgents) {
+                //split string so only gets name instead of the aid
                 players.add(new PlayerInformation(a.getName().split("@")[0],a, lastId++));
             }
             parameters.N = players.size();
+            //computes number of games
             int nGames = parameters.N * (parameters.N - 1) / 2;
             gameInfo = new GameInformation(nGames, players);
+            //initiliazes log string -> string that gives information about the points won on each game
             playerLogs = new String[players.size()][nGames];
             for (int i = 0; i < players.size(); i++) {
                 for (int j = 0; j < nGames; j++) {
@@ -265,15 +271,14 @@ public class MainAgent extends Agent {
 
             int pos1, pos2;
             while(played_rounds < parameters.R){
-                System.out.println("ROUND "+ (played_rounds+1));
                 msg = new ACLMessage(ACLMessage.REQUEST);
                 msg.setContent("Position");
                 msg.addReceiver(player1.aid);
                 send(msg);
 
-                //gui.logLine("Main Waiting for movement");
+                if(getVerbose()) gui.logLine("Main Waiting for movement");
                 ACLMessage move1 = blockingReceive();
-                //gui.logLine("Main Received " + move1.getContent() + " from " + move1.getSender().getName());
+                if (getVerbose()) gui.logLine("Main Received " + move1.getContent() + " from " + move1.getSender().getName());
                 pos1 = Integer.parseInt(move1.getContent().split("#")[1]);
 
                 msg = new ACLMessage(ACLMessage.REQUEST);
@@ -281,9 +286,9 @@ public class MainAgent extends Agent {
                 msg.addReceiver(player2.aid);
                 send(msg);
 
-                //gui.logLine("Main Waiting for movement");
+                if(getVerbose()) gui.logLine("Main Waiting for movement");
                 ACLMessage move2 = blockingReceive();
-                //gui.logLine("Main Received " + move2.getContent() + " from " + move2.getSender().getName());
+                if(getVerbose()) gui.logLine("Main Received " + move2.getContent() + " from " + move2.getSender().getName());
                 pos2 = Integer.parseInt(move2.getContent().split("#")[1]);
 
                 msg = new ACLMessage(ACLMessage.INFORM);

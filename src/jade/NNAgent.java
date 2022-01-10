@@ -73,7 +73,7 @@ public class NNAgent extends Agent {
 
         @Override
         public void action() {
-           // System.out.println(getAID().getName() + ":" + state.name());
+            System.out.println(getAID().getName() + ":" + state.name());
             msg = blockingReceive();
             if (msg != null) {
                 //System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
@@ -169,9 +169,9 @@ public class NNAgent extends Agent {
                                 else iAction = distValues.nextInt(S);
 
                             }
-                            //System.out.println("Position chosen:"+ iAction);
+                            System.out.println("Position chosen:"+ iAction);
                             msg.setContent("Position#"+iAction);
-                            //System.out.println(getAID().getName() + " sent " + msg.getContent());
+                            System.out.println(getAID().getName() + " sent " + msg.getContent());
                             send(msg);
                             state = State.s3AwaitingResult;
                         } else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Changed#")) {
@@ -197,7 +197,6 @@ public class NNAgent extends Agent {
                             iActionOpponent = SOM.iGetBMU(pastActionOpponentDouble, true);
                             pastActionOpponent.removeFirst();
                             pastActionMe.removeFirst();
-                            //iAction = RLObject.iGetNewActionQLearning(sState, S,result);
                             
                             state = State.s2Round;
                         } else {
@@ -269,16 +268,17 @@ public class NNAgent extends Agent {
             String[] contentSplit = msgContent.split("#");
             if(contentSplit.length != 3) return false;
             if(!contentSplit[0].equals("Results")) return false;
-            sState = contentSplit[1];
+            sState = contentSplit[1]; //state = x,y
             int stateA = Integer.parseInt(sState.charAt(0)+"");
             int stateB = Integer.parseInt(sState.charAt(2)+"");
             String[] resultsSplit = contentSplit[2].split(",");
             if(resultsSplit.length != 2) return false;
             if(playerA) {
+                //if its player a then result is before the coma
                 result = Integer.parseInt(resultsSplit[0]);
                 results += result;
-                pastActionMe.add(stateA*1.00);
-                pastActionOpponent.add(stateB*1.00);
+                pastActionMe.add(stateA*1.00); //this hasnt been used yet, might add it to the SOM input
+                pastActionOpponent.add(stateB*1.00); //actions of the opponent to predict with SOM
                 if(bestActionRow[stateB][0] == -1 || (bestActionRow[stateB][0] != -1 && bestActionRow[stateB][1] < result) ) {
                     bestActionRow[stateB][0] = stateA;
                     bestActionRow[stateB][1] = result;

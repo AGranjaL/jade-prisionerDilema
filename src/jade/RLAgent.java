@@ -67,10 +67,10 @@ public class RLAgent extends Agent {
 
         @Override
         public void action() {
-           // System.out.println(getAID().getName() + ":" + state.name());
+            System.out.println(getAID().getName() + ":" + state.name());
             msg = blockingReceive();
             if (msg != null) {
-                //System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
+                System.out.println(getAID().getName() + " received " + msg.getContent() + " from " + msg.getSender().getName()); //DELETEME
                 //-------- Agent logic
                 switch (state) {
                     case s0NoConfig:
@@ -137,9 +137,9 @@ public class RLAgent extends Agent {
                                 firstRound = false;
 
                             }
-                            //System.out.println("Position chosen:"+ iAction);
+                            System.out.println("Position chosen:"+ iAction);
                             msg.setContent("Position#"+iAction);
-                            //System.out.println(getAID().getName() + " sent " + msg.getContent());
+                            System.out.println(getAID().getName() + " sent " + msg.getContent());
                             send(msg);
                             state = State.s3AwaitingResult;
                         } else if (msg.getPerformative() == ACLMessage.INFORM && msg.getContent().startsWith("Changed#")) {

@@ -13,11 +13,12 @@ public final class GUI extends JFrame implements ActionListener {
     JLabel leftPanelExtraInformation;
     JScrollPane leftPanelScrollPane;
     JTextField leftPanelParamTextField;
+    JCheckBoxMenuItem toggleVerboseWindowMenu;
     JTextArea playerInfo;
     JList<String> list = new JList<String>();
     JList<String> listPlayers = new JList<String>();
     DefaultListModel<String> listModel = new DefaultListModel<String>();
-    String seltectedParam = "";
+    String selectedParam = "";
     private MainAgent mainAgent;
     private JPanel rightPanel;
     private JTextArea rightPanelLoggingTextArea;
@@ -55,9 +56,14 @@ public final class GUI extends JFrame implements ActionListener {
     }
     private void updateParameter(){
         //update parameter chosen in leftpanelscrollpane in mainagent
-        System.out.print("parameter: " + seltectedParam);
-        int value = Integer.parseInt(leftPanelParamTextField.getText());
-        mainAgent.setParameter(seltectedParam, value);
+        System.out.print("parameter: " + selectedParam);
+        try{        
+            int value = Integer.parseInt(leftPanelParamTextField.getText());
+            mainAgent.setParameter(selectedParam, value);
+        }catch(NumberFormatException ex){
+            System.out.println("The input needs to  be an Integer");
+        }
+
 
 
     }
@@ -139,7 +145,7 @@ public final class GUI extends JFrame implements ActionListener {
         leftPanelParamTextField.setPreferredSize(new Dimension(50, 20));
 
         listModel = new DefaultListModel<>();
-        listModel.addElement("N");
+        //listModel.addElement("N");
         listModel.addElement("S");
         listModel.addElement("R");
         listModel.addElement("I");
@@ -149,8 +155,7 @@ public final class GUI extends JFrame implements ActionListener {
         list.setSelectedIndex(0);
         //list.setVisibleRowCount(5);
         list.addListSelectionListener(listener -> {
-            seltectedParam = (String) list.getModel().getElementAt(list.getSelectedIndex());
-            System.out.println("parameter: " + seltectedParam);
+            selectedParam = (String) list.getModel().getElementAt(list.getSelectedIndex());
         });
 
         leftPanelScrollPane = new JScrollPane(list);
@@ -413,7 +418,7 @@ public final class GUI extends JFrame implements ActionListener {
 
         JMenu menuWindow = new JMenu("Window");
 
-        JCheckBoxMenuItem toggleVerboseWindowMenu = new JCheckBoxMenuItem("Verbose", true);
+        toggleVerboseWindowMenu = new JCheckBoxMenuItem("Verbose", true);
         toggleVerboseWindowMenu.addActionListener(actionEvent -> rightPanel.setVisible(toggleVerboseWindowMenu.getState()));
 
         menuWindow.add(toggleVerboseWindowMenu);
